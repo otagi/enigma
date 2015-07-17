@@ -33,8 +33,13 @@ module Enigma
       end
     end
 
+    # Reset the rotors' rings.
+    # The parameter is a string of A..Z chars:
+    #   `rings = 'ABC'
+    # or an array of ring positions (1..26):
+    #   `rings = [1, 9, 26]`
     def rings=(rings)
-      @rings = rings || ''
+      @rings = rings_to_s(rings) || ''
       @rotors.each_with_index do |rotor, index|
         rotor.ring = @rings[index] || 'A'
       end
@@ -45,6 +50,13 @@ module Enigma
     end
 
     private
+
+    def rings_to_s(rings)
+      if rings.respond_to?(:map)
+        rings = rings.map { |r| (r - 1 + 'A'.ord).chr }.join
+      end
+      rings
+    end
 
     def encode_char(char)
       rotate_rotors

@@ -18,6 +18,13 @@ describe Enigma::Enigma do
     expect(enigma.rotors[2].ring).to eq 'G'
   end
 
+  it 'resets the rotors with rings numerals' do
+    enigma.reset(rings: [5, 6, 7])
+    expect(enigma.rotors[0].ring).to eq 'E'
+    expect(enigma.rotors[1].ring).to eq 'F'
+    expect(enigma.rotors[2].ring).to eq 'G'
+  end
+
   context 'rotations and rings set to AAA' do
     before do
       enigma.reset(rotations: 'AAA', rings: 'AAA')
@@ -32,6 +39,17 @@ describe Enigma::Enigma do
   context 'rings set to BBB' do
     before do
       enigma.reset(rotations: 'AAA', rings: 'BBB')
+    end
+
+    it 'encodes a message' do
+      encoded_message = enigma.encode('AAAAA')
+      expect(encoded_message).to eq 'EWTYX'
+    end
+  end
+
+  context 'rings set to 02 02 02' do
+    before do
+      enigma.reset(rotations: 'AAA', rings: [2, 2, 2])
     end
 
     it 'encodes a message' do
