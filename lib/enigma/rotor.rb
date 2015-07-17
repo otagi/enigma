@@ -33,8 +33,10 @@ module Enigma
     end
 
     # Rotate by 1 step.
+    # Returns the new current char.
     def rotate
       @rotation = (@rotation + 1) % 26
+      rotation
     end
 
     # Is it time to make the next rotor rotate?
