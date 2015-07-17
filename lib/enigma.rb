@@ -1,5 +1,8 @@
 require "enigma/version"
-
-module Enigma
-  # Your code goes here...
-end
+require "enigma/rotor"
+require "enigma/reflector"
+require "enigma/rotor_i"
+require "enigma/rotor_ii"
+require "enigma/rotor_iii"
+require "enigma/reflector_b"
+require "enigma/enigma"
