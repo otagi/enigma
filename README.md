@@ -58,7 +58,7 @@ enigma.rotations = 'AAA'
 	
 	RotorI, II, III, IV and V are available.
 
-- **reflectors**
+- **reflector**
 	
 	A Reflector object.
 	
