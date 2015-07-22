@@ -16,16 +16,22 @@ module Enigma
     attr_accessor :rotors, :reflector
 
     def initialize(options = {})
-      @rotors = options.delete(:rotors)
-      @reflector = options.delete(:reflector)
+      @rotors    = []
+      @reflector = nil
+      @rotations = ''
+      @rings     = ''
+      @plugboard = {}
       reset(options)
     end
 
     def reset(options = {})
-      self.rotations = options.delete(:rotations)
-      self.rings = options.delete(:rings)
+      options.each do |option, value|
+        self.send("#{option}=", value) if self.respond_to?("#{option}=")
+      end
     end
 
+    # Set the rotors' rotations.
+    # `rotations = 'ABC'` (one A..Z char per rotor)
     def rotations=(rotations)
       @rotations = rotations || ''
       @rotors.each_with_index do |rotor, index|
@@ -33,25 +39,37 @@ module Enigma
       end
     end
 
-    # Reset the rotors' rings.
-    # The parameter is a string of A..Z chars:
-    #   `rings = 'ABC'
-    # or an array of ring positions (1..26):
-    #   `rings = [1, 9, 26]`
+    # Set the rotors' rings.
+    # `rings = 'ABC'` (one A..Z char per rotor) or
+    # `rings = [1, 9, 26]` (one 1..26 number per rotor)
     def rings=(rings)
-      @rings = rings_to_s(rings) || ''
+      @rings = rings_array_to_string(rings) || ''
       @rotors.each_with_index do |rotor, index|
         rotor.ring = @rings[index] || 'A'
       end
     end
 
+    # Set the plugboard connections.
+    # `plugboard = ['AE', 'CK', ...]` (one pair of chars for each connection)
+    def plugboard=(plugboard)
+      plugboard ||= []
+      @plugboard = Hash[plugboard.map(&:chars)]
+      @plugboard.merge! @plugboard.invert
+    end
+
+    # Make a char go through the plugboard.
+    def plugboard(char)
+      @plugboard[char] || char
+    end
+
+    # Encode a message through the plugboard, rotors, reflector, and back.
     def encode(message)
       message.chars.map { |c| encode_char(c) }.join
     end
 
     private
 
-    def rings_to_s(rings)
+    def rings_array_to_string(rings)
       if rings.respond_to?(:map)
         rings = rings.map { |r| (r - 1 + 'A'.ord).chr }.join
       end
@@ -61,7 +79,7 @@ module Enigma
     def encode_char(char)
       rotate_rotors
 
-      # TODO: Plugboard encoding
+      char = plugboard(char)
 
       char = @rotors[2].encode(char)
       char = @rotors[1].encode(char)
@@ -73,7 +91,7 @@ module Enigma
       char = @rotors[1].decode(char)
       char = @rotors[2].decode(char)
 
-      # TODO: Plugboard decoding
+      char = plugboard(char)
 
       char
     end

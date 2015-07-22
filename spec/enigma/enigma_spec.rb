@@ -25,6 +25,13 @@ describe Enigma::Enigma do
     expect(enigma.rotors[2].ring).to eq 'G'
   end
 
+  it 'resets the plugboard' do
+    enigma.reset(plugboard: %w(AV BS CG DL FU HZ IN KM OW RX))
+    expect(enigma.plugboard('A')).to eq 'V'
+    expect(enigma.plugboard('V')).to eq 'A'
+    expect(enigma.plugboard('E')).to eq 'E'
+  end
+
   context 'rotations and rings set to AAA' do
     before do
       enigma.reset(rotations: 'AAA', rings: 'AAA')
@@ -56,5 +63,22 @@ describe Enigma::Enigma do
       encoded_message = enigma.encode('AAAAA')
       expect(encoded_message).to eq 'EWTYX'
     end
+  end
+
+  context 'long message' do
+    before do
+      enigma.reset(
+        rotors: [Enigma::RotorII.new, Enigma::RotorI.new, Enigma::RotorV.new],
+        rotations: 'FRA',
+        rings: 'AAA',
+        plugboard: %w(AB IR UX KP)
+      )
+    end
+
+    # TODO: Find a good example to test encoding with the plugboard.
+    # it 'encodes a long message' do
+    #   encoded_message = enigma.encode('ANBULMEGRAZGOESTINGSTRENGGEHEIMEMELDUNG')
+    #   expect(encoded_message).to eq 'PCDAONONEBCJBOGLYMEEYGSHRYUBUJHMJOQZLEX'
+    # end
   end
 end
