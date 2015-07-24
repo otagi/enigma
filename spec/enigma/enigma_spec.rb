@@ -83,7 +83,7 @@ describe Enigma::Enigma do
     end
 
     it 'decodes a message' do
-      encoded_message = enigma.encode('CHESY')
+      encoded_message = enigma.decode('CHESY')
       expect(encoded_message).to eq 'MYDOG'
     end
   end

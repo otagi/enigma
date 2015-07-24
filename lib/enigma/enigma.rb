@@ -67,6 +67,8 @@ module Enigma
       message.chars.map { |c| encode_char(c) }.join
     end
 
+    alias_method :decode, :encode
+
     private
 
     def rings_array_to_string(rings)
