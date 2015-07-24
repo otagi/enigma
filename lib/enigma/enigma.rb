@@ -64,7 +64,9 @@ module Enigma
 
     # Encode a message through the plugboard, rotors, reflector, and back.
     def encode(message)
-      message.chars.map { |c| encode_char(c) }.join
+      cleaned_message = message.gsub(/[^A-Z]/, '')
+      encoded_message = cleaned_message.chars.map { |c| encode_char(c) }.join
+      chunked_message = encoded_message.scan(/.{1,5}/).join(' ')
     end
 
     alias_method :decode, :encode
