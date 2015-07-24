@@ -87,4 +87,29 @@ describe Enigma::Enigma do
       expect(encoded_message).to eq 'MYDOG'
     end
   end
+
+  # Settings and result from
+  # http://operationturing.tumblr.com/post/120671980865
+  # http://operationturing.tumblr.com/post/120819236115
+  context 'operation turing - 5 june 1940' do
+    before do
+      enigma.reset(
+        rotors: [Enigma::RotorII.new, Enigma::RotorIV.new, Enigma::RotorIII.new],
+        rings: [16, 3, 10],
+        plugboard: %w(AJ BH CI FV KU LW MZ NX OY PS)
+      )
+    end
+
+    it 'decodes the message key' do
+      enigma.rotations = 'HNS'
+      message_key = enigma.decode('ALB')
+      expect(message_key).to eq 'MTJ'
+    end
+
+    it 'decodes the message content' do
+      enigma.rotations = 'MTJ'
+      message = enigma.decode('BVGKY QPBWY WYOHR NVEBU RSQFF IYUTF FZZDB SEYUX OYVVW VXNEB MWSBY WOPSC CQUHI REHOA EMUFT UYYDT QFXPJ UMEHJ AXKZT TGTRR OKWSB EQLJK YOIGC SVIDA SQDYN DCQUS KEYQD BONJR')
+      expect(message).to eq 'ITHAS BEENA MONTH SINCE OURLA STCOR RESPO NDENC EXIFY OUDON OTPAT CHMET HROUG HTOME NZIES NOWIM GOING TORES CUEBE STAND STEVE NSMYS ELFXI DONTC AREAB OUTTH ERISK XXXXX'
+    end
+  end
 end
