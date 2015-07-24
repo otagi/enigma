@@ -65,20 +65,26 @@ describe Enigma::Enigma do
     end
   end
 
-  context 'long message' do
+  # Settings and result from
+  # http://www.enigmaworldcodegroup.com/#!create-an-enigma-message/c1lth
+  context 'plugboard set' do
     before do
       enigma.reset(
-        rotors: [Enigma::RotorII.new, Enigma::RotorI.new, Enigma::RotorV.new],
-        rotations: 'FRA',
-        rings: 'AAA',
-        plugboard: %w(AB IR UX KP)
+        rotors: [Enigma::RotorIII.new, Enigma::RotorV.new, Enigma::RotorII.new],
+        rotations: 'TMK',
+        rings: [8, 6, 23],
+        plugboard: %w(BJ CY DX EZ FH GO LN MW QV TU)
       )
     end
 
-    # TODO: Find a good example to test encoding with the plugboard.
-    # it 'encodes a long message' do
-    #   encoded_message = enigma.encode('ANBULMEGRAZGOESTINGSTRENGGEHEIMEMELDUNG')
-    #   expect(encoded_message).to eq 'PCDAONONEBCJBOGLYMEEYGSHRYUBUJHMJOQZLEX'
-    # end
+    it 'encodes a message' do
+      encoded_message = enigma.encode('MYDOG')
+      expect(encoded_message).to eq 'CHESY'
+    end
+
+    it 'decodes a message' do
+      encoded_message = enigma.encode('CHESY')
+      expect(encoded_message).to eq 'MYDOG'
+    end
   end
 end
