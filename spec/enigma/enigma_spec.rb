@@ -8,18 +8,27 @@ describe Enigma::Enigma do
       rotors: [Enigma::RotorI.new, Enigma::RotorII.new, Enigma::RotorIII.new],
       reflector: Enigma::ReflectorB.new
     )
-    expect(enigma.is_a?(Enigma::Enigma)).to eq true
-    expect(enigma.rotors[0].is_a?(Enigma::RotorI)).to eq true
-    expect(enigma.rotors[1].is_a?(Enigma::RotorII)).to eq true
-    expect(enigma.rotors[2].is_a?(Enigma::RotorIII)).to eq true
-    expect(enigma.reflector.is_a?(Enigma::ReflectorB)).to eq true
+    expect(enigma.class).to eq Enigma::Enigma
+    expect(enigma.rotors[0].class).to eq Enigma::RotorI
+    expect(enigma.rotors[1].class).to eq Enigma::RotorII
+    expect(enigma.rotors[2].class).to eq Enigma::RotorIII
+    expect(enigma.reflector.class).to eq Enigma::ReflectorB
+  end
+
+  it 'creates a new Enigma machine with rotors and reflector strings' do
+    enigma = Enigma::Enigma.new(rotors: %w(I II III), reflector: 'B')
+    expect(enigma.class).to eq Enigma::Enigma
+    expect(enigma.rotors[0].class).to eq Enigma::RotorI
+    expect(enigma.rotors[1].class).to eq Enigma::RotorII
+    expect(enigma.rotors[2].class).to eq Enigma::RotorIII
+    expect(enigma.reflector.class).to eq Enigma::ReflectorB
   end
 
   context 'sample Enigma' do
     before do
       enigma.reset(
-        rotors: [Enigma::RotorI.new, Enigma::RotorII.new, Enigma::RotorIII.new],
-        reflector: Enigma::ReflectorB.new
+        rotors: %w(I II III),
+        reflector: 'B'
       )
     end
 
@@ -71,8 +80,8 @@ describe Enigma::Enigma do
   context 'WCG Enigma' do
     before do
       enigma.reset(
-        rotors: [Enigma::RotorIII.new, Enigma::RotorV.new, Enigma::RotorII.new],
-        reflector: Enigma::ReflectorB.new,
+        rotors: %w(III V II),
+        reflector: 'B',
         rotations: 'TMK',
         rings: [8, 6, 23],
         plugboard: %w(BJ CY DX EZ FH GO LN MW QV TU)

@@ -4,7 +4,10 @@ module Enigma
   # Initialize it with 3 rotors (left to right) and 1 reflector:
   #   enigma = Enigma.new(
   #      rotors: [RotorI.new, RotorII.new, RotorIII.new],
-  #      reflector: Reflector.new)
+  #      reflector: ReflectorB.new)
+  # or:
+  #   enigma = Enigma.new(rotors: %w(I II III), reflector: 'B')
+  #
   #
   # Reset it with the rotors code and rings code:
   #   enigma.reset(rotations: 'AAA', rings: 'AAA')
@@ -28,6 +31,16 @@ module Enigma
       options.each do |option, value|
         self.send("#{option}=", value) if self.respond_to?("#{option}=")
       end
+    end
+
+    def rotors=(rotors)
+      @rotors = rotors.map do |r|
+        r.is_a?(String) ? Kernel.const_get("Enigma::Rotor#{r}").new : r
+      end
+    end
+
+    def reflector=(r)
+      @reflector = r.is_a?(String) ? Kernel.const_get("Enigma::Reflector#{r}").new : r
     end
 
     # Set the rotors' rotations.
